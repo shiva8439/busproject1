@@ -3,15 +3,15 @@ const http = require('http');
 const cors = require('cors');
 require('dotenv').config();
 
-const connectDB = require('./config/database');
-const { initializeSocket } = require('./config/socket');
-const errorHandler = require('./middleware/error');
-const limiter = require('./middleware/rateLimiter');
+const connectDB = require('./database');
+const { initializeSocket } = require('./socket');
+const errorHandler = require('./error');
+const limiter = require('./rateLimiter');
 
-const authRoutes = require('./routes/auth');
-const busRoutes = require('./routes/bus');
-const routeRoutes = require('./routes/routes');
-const stopRoutes = require('./routes/stops');
+const authRoutes = require('./auth');
+const busRoutes = require('./bus');
+const routeRoutes = require('./routes');
+const stopRoutes = require('./stops');
 
 const app = express();
 const server = http.createServer(app);
@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 // Compatibility route for Flutter app - maps /vehicles/search to /api/bus
 app.get('/vehicles/search', async (req, res) => {
   try {
-    const Bus = require('./models/Bus');
+    const Bus = require('./Bus');
     const { number } = req.query;
     
     let buses;
@@ -91,3 +91,4 @@ server.listen(PORT, () => {
 });
 
 module.exports = app;
+
