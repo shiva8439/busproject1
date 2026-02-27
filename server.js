@@ -17,6 +17,7 @@ const app = express();
 const server = http.createServer(app);
 
 connectDB();
+
 initializeSocket(server);
 
 app.use(cors());
@@ -36,11 +37,12 @@ app.get('/', (req, res) => {
   });
 });
 
+// Compatibility route for Flutter app - maps /vehicles/search to /api/bus
 app.get('/vehicles/search', async (req, res) => {
   try {
     const Bus = require('./models/Bus');
     const { number } = req.query;
-
+    
     let buses;
     if (number) {
       buses = await Bus.find({ busNumber: number.toUpperCase() }).populate('route');
@@ -63,8 +65,10 @@ app.get('/vehicles/search', async (req, res) => {
       route: bus.route
     }));
 
-    res.json({ success: true, vehicles });
-
+    res.json({
+      success: true,
+      vehicles
+    });
   } catch (error) {
     res.status(500).json({
       success: false,
